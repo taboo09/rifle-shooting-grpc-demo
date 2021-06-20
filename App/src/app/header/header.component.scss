@@ -1,0 +1,35 @@
+.header-container{
+    background-color: #193153;
+    position: relative;
+    display: flex;
+    padding: 25px 10px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+    .header-logo{
+        display: inline-flex;
+        img{
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+        }
+    }
+    
+    .header-title{
+        display: inline-flex;
+        align-self: flex-end;
+        color: #ffffff;
+        padding-left: 1.2rem;
+        h1 {
+            font-family: 'Indie Flower', cursive;
+            font-size: 2.5em;
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .header-container {
+        .header-title h1 {
+            font-size: 1.85em;
+        }
+    }
+}

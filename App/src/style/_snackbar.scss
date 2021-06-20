@@ -1,0 +1,22 @@
+/* snackbar classes custom */
+.snackbar-confirm{
+    background: rgba(10, 10, 10, 0.9);
+    color: aqua;
+    font-weight: 400;
+ }
+ .snackbar-message{
+    background: rgba(173, 198, 245, 0.9);
+    background: #01FF70;
+    color: rgb(41, 41, 41);
+    font-weight: 400;
+
+    .mat-simple-snackbar-action{
+       color: rgb(41, 41, 41);
+    }
+ }
+.snackbar-error{
+    background: rgb(214, 3, 3);
+    opacity: .9;
+    color: #ffffff;
+    font-weight: 400;
+}

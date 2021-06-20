@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "Registration";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package registration;
+
+service Registration {
+    rpc RegisterMember(Member) returns (google.protobuf.Empty);
+}
+
+message Member {
+    string name = 1;
+    string age = 2;
+    string address = 3;
+    string city = 4;
+    string post_code = 5;
+    google.protobuf.Timestamp dob = 6;
+}
