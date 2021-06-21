@@ -17,6 +17,17 @@ namespace Membership
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+
+            services.AddCors(o =>
+            {
+                o.AddPolicy("gRPC-Policy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -29,9 +40,13 @@ namespace Membership
 
             app.UseRouting();
 
+            app.UseCors("gRPC-Policy");
+
+            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<MembershipService>();
 
                 endpoints.MapGet("/", async context =>
                 {

@@ -4,6 +4,8 @@
         <mat-card-subtitle>All Members</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <p>content</p>
+        <ul>
+            <li *ngFor="let member of members$ | async">{{ member.id }} - {{ member.name }} {{ member.age }}</li>
+        </ul>
     </mat-card-content>
 </mat-card>
