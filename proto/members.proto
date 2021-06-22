@@ -8,14 +8,21 @@ import "google/protobuf/timestamp.proto";
 package members;
 
 service Membership {
-    rpc GetMembersStream(google.protobuf.Empty) returns (stream Member);
+    rpc GetMembersStream(google.protobuf.Empty) returns (stream MemberOut);
+
+    rpc SetMember(MemberIn) returns (google.protobuf.Empty);
 }
 
-// message Members {
-//     repeated Member Member = 1;
-// }
+message MemberIn {
+    string name = 1;
+    int32 age = 2;
+    string address = 3;
+    string city = 4;
+    string post_code = 5;
+    google.protobuf.Timestamp dob = 6;
+}
 
-message Member {
+message MemberOut {
     int32 id = 1;
     string name = 2;
     int32 age = 3;

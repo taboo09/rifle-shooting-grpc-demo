@@ -1,6 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Grpc.Net.Client;
+using Members;
 using Microsoft.Extensions.Logging;
 using NewUser;
 using Registration.Data;
@@ -36,9 +38,28 @@ namespace Registration
                 return new UserValid() { Valid = false, ErrorMessage = "User has criminal record!" };
             }
 
-            // if (hasRecord) await CreateMembership();
+            await CallMembershipService(request, age);
 
             return new UserValid() { Valid = true };;
+        }
+
+        private async Task CallMembershipService(User user, int age)
+        {
+            using var channel = GrpcChannel.ForAddress("https://localhost:5072");
+
+            var client =  new Membership.MembershipClient(channel);
+
+            client.SetMember(new MemberIn
+            {
+                Name = $"{user.FirstName} {user.LastName}",
+                Age = age,
+                Address = user.Address,
+                City = user.City,
+                PostCode = user.PostCode,
+                Dob = user.Dob
+            });
+
+            await Task.Delay(100);
         }
     }
 }

@@ -12,12 +12,18 @@ export class MembershipComponent implements OnInit {
 
   members$: Observable<MemberUser[]>;
 
+  displayedColumns: string[] = ['id', 'name', 'address', 'postcode', 'dob', 'age'];
+
   constructor(private membershipService: MembershipService) { }
 
   ngOnInit(): void {
     this.membershipService.getMembers();
 
     this.members$ = this.membershipService.members$;
+
+    // this.members$.subscribe(data => {
+    //   console.log(data)
+    // })
   }
 
 }

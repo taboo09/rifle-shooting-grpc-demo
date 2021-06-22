@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Members;
+using Membership.Data;
 using Microsoft.Extensions.Logging;
 using static Members.Membership;
 
@@ -17,7 +18,7 @@ namespace Membership
             _logger = logger;
         }
 
-        public override async Task GetMembersStream(Empty request, IServerStreamWriter<Member> memberResponse, ServerCallContext context)
+        public override async Task GetMembersStream(Empty request, IServerStreamWriter<MemberOut> memberResponse, ServerCallContext context)
         {
             _logger.LogInformation($"Request from: {context.Peer}");
             _logger.LogInformation($"Request from: {context.RequestHeaders.ToList()[0].ToString()}");
@@ -25,27 +26,42 @@ namespace Membership
 
             var rand = new Random();
 
-            for (int i = 0; i < 10; i++)
+            while (!context.CancellationToken.IsCancellationRequested)
             {
-                if (context.CancellationToken.IsCancellationRequested)
-                {
-                    _logger.LogInformation($"Request has been cancelled by the user");
-                    break;
-                }
+                if (Singleton.Members.Count > 0)
+                {                
+                    for(var i = 0; i < Singleton.Members.Count; i++)
+                    {
+                        await memberResponse.WriteAsync(Singleton.Members[i]);
+                    }
 
-                await memberResponse.WriteAsync(new Member
-                {
-                    Id = 10 + i + 1,
-                    Name = "John Defoe",
-                    Age = rand.Next(18, 70),
-                    Address = "1 Kings Lane",
-                    City = "Tamworth",
-                    PostCode = "X00 X00",
-                    Dob = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow),
-                });
+                    Singleton.Clear();
 
-                await Task.Delay(5000);
+                    // await Task.Delay(2000);
+                }            
             }
+
+            _logger.LogInformation($"Request has been cancelled by the user");
+        }
+
+        public override async Task<Empty> SetMember(MemberIn request, ServerCallContext context)
+        {
+            await Task.Delay(1000);
+
+            var rand = new Random();
+
+            Singleton.Members.Add(new  MemberOut
+            {
+                Id = rand.Next(1, 1000),
+                Name = request.Name,
+                Age = request.Age,
+                Address = request.Address,
+                City = request.City,
+                PostCode = request.PostCode,
+                Dob = request.Dob
+            });
+
+            return new Empty();
         }
     }
 }

@@ -22,12 +22,12 @@ export class FormComponent implements OnInit {
 
   createForm(){
     this.memberForm = this.fb.group({
-      first_name: ['', [Validators.required, Validators.maxLength(30)]],
-      last_name: ['', [Validators.required, Validators.maxLength(30)]],
-      dob: [undefined, [Validators.required]],
-      address: ['', [Validators.maxLength(100)]],
-      city: ['', [Validators.required, Validators.maxLength(30)]],
-      post_code: ['', [Validators.required, Validators.maxLength(8)]]
+      first_name: ['John', [Validators.required, Validators.maxLength(30)]],
+      last_name: ['Smith', [Validators.required, Validators.maxLength(30)]],
+      dob: [new Date(2000, 11, 17), [Validators.required]],
+      address: ['17 Kings Lane', [Validators.maxLength(100)]],
+      city: ['Tamworth', [Validators.required, Validators.maxLength(30)]],
+      post_code: ['A11 A11', [Validators.required, Validators.maxLength(8)]]
     });
   }
 

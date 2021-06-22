@@ -3,7 +3,7 @@ import { grpc } from '@improbable-eng/grpc-web';
 import { MembershipClient } from 'proto/members_pb_service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Member } from 'proto/members_pb';
+import { MemberIn, MemberOut } from 'proto/members_pb';
 import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 import { MemberUser } from '../models/member';
 import { mapDateFromTimestamp } from './timestamp-map';
@@ -28,27 +28,30 @@ export class MembershipService {
   getMembers() {
     let req = new Empty();
 
-    this.grpcClient.getMembersStream(req, this.metadata).on('data', (member: Member) => {
+    this.grpcClient.getMembersStream(req, this.metadata).on('data', (member: MemberOut) => {
 
       let members = this.membersSubject.getValue();
-      members.push(this.mapMemberUser(member));
+      members.push(this.mapMemberUser(member?.toObject() as MemberOut.AsObject));
 
       this.membersSubject.next(members);
 
-    }).on('end', () => {
-      console.log('End of request');
-    });
+      console.log(this.mapMemberUser(member?.toObject() as MemberOut.AsObject));
+
+    })
+    // .on('end', () => {
+    //   console.log('End of request');
+    // });
   }
 
-  private mapMemberUser(member: Member): MemberUser{
+  private mapMemberUser(member: any): MemberUser{
     return {
-      id: member.getId(),
-      age: member.getAge(),
-      name: member.getName(),
-      address: member.getAddress(),
-      city: member.getCity(),
-      post_code: member.getPostCode(),
-      dob: mapDateFromTimestamp(member.getDob)
+      id: member.id,
+      age: member.age,
+      name: member.name,
+      address: member.address,
+      city: member.city,
+      post_code: member.postCode,
+      dob: mapDateFromTimestamp(member.dob)
     }
   }
 }
